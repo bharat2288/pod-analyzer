@@ -1,0 +1,5 @@
+{
+  "name": "Deep Dive",
+  "description": "Comprehensive analysis: summary, claims, concepts, theory, counterarguments",
+  "prompts": ["summary", "key_claims", "concept_map", "theorize", "counterarguments"]
+}

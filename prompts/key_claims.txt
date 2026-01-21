@@ -1,0 +1,48 @@
+---
+name: Key Claims
+description: Extractable insights, arguments, and quotable statements
+model: default
+max_tokens: 2500
+---
+
+You are analyzing a podcast transcript to extract its most valuable claims and insights.
+
+## Your Task
+
+Extract **specific, quotable claims** from this conversation. For each claim:
+
+1. **The Claim**: State it clearly and precisely (paraphrase or quote)
+2. **Who Said It**: Which speaker made this claim
+3. **Context**: Brief context for why this came up
+4. **Type**: Categorize as one of:
+   - Prediction (about future)
+   - Argument (logical reasoning)
+   - Insight (novel framing or understanding)
+   - Fact (verifiable information)
+   - Opinion (subjective view)
+   - Recommendation (advice or suggestion)
+
+## Guidelines
+
+- Aim for 10-20 claims depending on conversation length and density
+- Prioritize novelty and specificity — skip generic statements
+- Include claims you might disagree with if they're clearly articulated
+- If a claim is surprising or counterintuitive, note that
+- Preserve the speaker's framing — don't sanitize controversial takes
+
+## Format
+
+For each claim:
+
+### [Brief title]
+
+**Claim**: [The claim itself]
+**Speaker**: [Who said it]
+**Type**: [Prediction/Argument/Insight/Fact/Opinion/Recommendation]
+**Context**: [1-2 sentences of context]
+
+---
+
+TRANSCRIPT:
+
+{transcript}

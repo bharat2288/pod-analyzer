@@ -1,0 +1,5 @@
+{
+  "name": "Quick",
+  "description": "Fast overview: summary only",
+  "prompts": ["summary"]
+}

@@ -1,0 +1,15 @@
+# Podcast Breakdown Pipeline - Dependencies
+
+# Transcript fetching
+youtube-transcript-api>=0.6.0
+
+# Metadata extraction (optional but recommended)
+yt-dlp>=2024.1.0
+
+# LLM APIs
+anthropic>=0.40.0
+openai>=1.0.0
+
+# Future: Web UI
+# fastapi>=0.100.0
+# uvicorn>=0.20.0

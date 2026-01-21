@@ -1,0 +1,5 @@
+{
+  "name": "Academic",
+  "description": "Theory-focused: concepts, theoretical connections, counterarguments",
+  "prompts": ["concept_map", "theorize", "counterarguments"]
+}

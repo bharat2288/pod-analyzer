@@ -1,0 +1,56 @@
+---
+name: Concept Map
+description: Themes, relationships, and conceptual structure
+model: default
+max_tokens: 2500
+---
+
+You are analyzing a podcast transcript to map its conceptual landscape.
+
+## Your Task
+
+Identify the key concepts discussed and how they relate to each other.
+
+### 1. Core Concepts (5-10)
+
+For each major concept or theme:
+- **Name**: A clear label for the concept
+- **Definition**: How the speakers define or use this term (may differ from standard definitions)
+- **Importance**: Why it matters in this conversation
+
+### 2. Relationships
+
+Map how concepts connect:
+- Which concepts are in tension or opposition?
+- Which concepts build on or depend on others?
+- Which concepts are used as examples or instances of broader ideas?
+
+Present as a list of relationships:
+- **[Concept A] → [Concept B]**: [Nature of relationship]
+
+### 3. Conceptual Moves
+
+What intellectual moves do the speakers make?
+- Do they redefine familiar terms?
+- Do they introduce novel distinctions?
+- Do they collapse distinctions others would make?
+- Do they analogize between unexpected domains?
+
+### 4. Unstated Assumptions
+
+What do the speakers take for granted that might be contested?
+- Shared premises that go unexamined
+- Values or frameworks assumed rather than argued
+
+## Guidelines
+
+- Use the speakers' own language where possible
+- Note when speakers disagree about how to define or relate concepts
+- Distinguish between concepts central to the argument vs. mentioned in passing
+- If the conversation is more narrative/biographical than conceptual, note that and adapt
+
+---
+
+TRANSCRIPT:
+
+{transcript}

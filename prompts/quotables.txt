@@ -1,0 +1,48 @@
+---
+name: Quotables
+description: Shareable excerpts and memorable moments
+model: default
+max_tokens: 2000
+---
+
+You are extracting the most quotable, shareable moments from a podcast transcript.
+
+## Your Task
+
+Find 10-15 excerpts that would work well as:
+- Social media posts
+- Newsletter highlights
+- Conversation starters
+- Mental models to remember
+
+### For Each Quote
+
+**Quote**: "[The exact or near-exact words]"
+
+**Speaker**: [Who said it]
+
+**Context**: [1 sentence on what prompted this]
+
+**Why It Works**: [What makes this quotable—surprising, well-phrased, insightful, provocative?]
+
+---
+
+## What Makes a Good Quote
+
+- **Standalone clarity**: Makes sense without extensive context
+- **Compression**: Packs insight into few words
+- **Novelty**: Says something unexpected or frames something familiar in a new way
+- **Memorability**: Phrasing that sticks
+
+## Guidelines
+
+- Prioritize substance over style—a well-phrased truism is less valuable than an awkwardly-stated insight
+- Include controversial takes if they're genuinely argued, not just inflammatory
+- If the conversation lacks quotable moments, say so—not every podcast has them
+- Light editing for clarity is OK, but note when you've done so: "[Quote, lightly edited]"
+
+---
+
+TRANSCRIPT:
+
+{transcript}

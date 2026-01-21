@@ -1,0 +1,5 @@
+{
+  "name": "Default",
+  "description": "Standard analysis: summary and key claims",
+  "prompts": ["summary", "key_claims"]
+}

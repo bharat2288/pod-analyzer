@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Podcast Breakdown</title>
+
+    <!-- Favicon: sound wave icon in accent color -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230c0f0d'/><g stroke='%23d4a574' stroke-width='2.5' stroke-linecap='round' fill='none'><line x1='6' y1='16' x2='6' y2='16'/><line x1='10' y1='12' x2='10' y2='20'/><line x1='14' y1='8' x2='14' y2='24'/><line x1='18' y1='10' x2='18' y2='22'/><line x1='22' y1='13' x2='22' y2='19'/><line x1='26' y1='16' x2='26' y2='16'/></g></svg>">
+
+    <!-- Fonts -->
+    <link href="https://fonts.cdnfonts.com/css/geist" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        base: '#0c0f0d',
+                        surface: '#1a1d1b',
+                        raised: '#252a27',
+                        elevated: '#323832',
+                        border: {
+                            subtle: '#2a2f2c',
+                            DEFAULT: '#3a3f3c',
+                            emphasis: '#4a4f4c'
+                        },
+                        text: {
+                            primary: '#fafafa',
+                            secondary: '#a8a8a8',
+                            tertiary: '#787878',
+                            muted: '#585858'
+                        },
+                        accent: {
+                            camel: '#d4a574',
+                            'camel-hover': '#c9956c',
+                            'camel-subtle': '#2d251f',
+                            terra: '#cd8264',
+                            'terra-hover': '#b87254'
+                        },
+                        semantic: {
+                            success: '#7ab07a',
+                            error: '#cd6464'
+                        }
+                    },
+                    fontFamily: {
+                        base: ['Geist', 'Plus Jakarta Sans', '-apple-system', 'sans-serif'],
+                        display: ['Fraunces', 'Georgia', 'serif'],
+                        mono: ['SF Mono', 'Monaco', 'Cascadia Code', 'Consolas', 'monospace']
+                    },
+                    boxShadow: {
+                        'sm': '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.2)',
+                        'md': '0 4px 8px rgba(0,0,0,0.35), 0 2px 4px rgba(0,0,0,0.25)',
+                        'lg': '0 12px 28px rgba(0,0,0,0.45), 0 8px 12px rgba(0,0,0,0.35)',
+                        'glow-camel': '0 0 24px rgba(212, 165, 116, 0.2)',
+                        'glow-success': '0 0 10px rgba(122, 176, 122, 0.5)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --bg-base: #0c0f0d;
+            --bg-surface: #1a1d1b;
+            --bg-raised: #252a27;
+            --bg-elevated: #323832;
+            --border-subtle: #2a2f2c;
+            --border-default: #3a3f3c;
+            --text-primary: #fafafa;
+            --text-secondary: #a8a8a8;
+            --text-tertiary: #787878;
+            --text-muted: #585858;
+            --accent-camel: #d4a574;
+            --accent-camel-hover: #c9956c;
+            --accent-camel-subtle: #2d251f;
+            --shadow-md: 0 4px 8px rgba(0,0,0,0.35), 0 2px 4px rgba(0,0,0,0.25);
+            --shadow-lg: 0 12px 28px rgba(0,0,0,0.45), 0 8px 12px rgba(0,0,0,0.35);
+            --shadow-glow-camel: 0 0 24px rgba(212, 165, 116, 0.2);
+        }
+
+        body {
+            font-family: 'Geist', 'Plus Jakarta Sans', -apple-system, sans-serif;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-surface); }
+        ::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--border-default); }
+
+        /* Label patterns */
+        .label {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+        }
+        .label-section {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--accent-camel);
+        }
+
+        /* Display title (character moment) */
+        .title-display {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 48px;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        /* Card with top highlight */
+        .card {
+            background-color: var(--bg-surface);
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+            border-radius: 12px 12px 0 0;
+        }
+
+        /* Primary button with energy */
+        .btn-primary {
+            padding: 14px 28px;
+            background: linear-gradient(135deg, var(--accent-camel), var(--accent-camel-hover));
+            border: none;
+            border-radius: 10px;
+            color: var(--bg-base);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-md), var(--shadow-glow-camel);
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg), 0 0 30px rgba(212, 165, 116, 0.3);
+        }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Secondary/ghost button */
+        .btn-ghost {
+            padding: 8px 16px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+        .btn-ghost:hover {
+            border-color: var(--border-default);
+            color: var(--text-primary);
+            background: var(--bg-raised);
+        }
+
+        /* Inputs punch through to base */
+        .input-base {
+            width: 100%;
+            padding: 14px 16px;
+            background-color: var(--bg-base);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.15s;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .input-base:focus {
+            border-color: var(--accent-camel);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2), 0 0 0 3px var(--accent-camel-subtle);
+        }
+        .input-base::placeholder {
+            color: var(--text-muted);
+        }
+        .input-base:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Tab styling */
+        .tab-btn {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.15s;
+            border: none;
+            cursor: pointer;
+            background: transparent;
+            color: var(--text-muted);
+        }
+        .tab-btn:hover {
+            color: var(--text-secondary);
+            background: var(--bg-base);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--accent-camel), var(--accent-camel-hover));
+            color: var(--bg-base);
+            font-weight: 600;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.3), var(--shadow-glow-camel);
+        }
+
+        /* Analysis tags */
+        .tag {
+            font-size: 11px;
+            padding: 4px 8px;
+            background: var(--bg-base);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        /* Hand-drawn accent element */
+        .hand-drawn-accent {
+            position: absolute;
+            top: 8px;
+            right: -52px;
+            width: 40px;
+            height: 32px;
+            opacity: 0.45;
+        }
+        .hand-drawn-accent path {
+            stroke: var(--accent-camel);
+            stroke-width: 2;
+            stroke-linecap: round;
+            fill: none;
+        }
+
+        /* Markdown styling — uses Plus Jakarta Sans for reading */
+        .prose {
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+        }
+        .prose h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-primary); }
+        .prose h2 { font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; color: var(--text-primary); }
+        .prose h3 { font-size: 1.1rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.5rem; color: var(--text-secondary); }
+        .prose p { margin-bottom: 0.75rem; line-height: 1.7; color: var(--text-secondary); }
+        .prose ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 0.75rem; }
+        .prose li { margin-bottom: 0.25rem; color: var(--text-secondary); }
+        .prose strong { color: var(--text-primary); }
+        .prose blockquote { border-left: 3px solid var(--accent-camel); padding-left: 1rem; margin: 1rem 0; color: var(--text-tertiary); font-style: italic; }
+        .prose code { background: var(--bg-raised); padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875rem; font-family: 'SF Mono', Monaco, monospace; }
+        .prose hr { border-color: var(--border-subtle); margin: 1.5rem 0; }
+
+        /* Search highlight */
+        .highlight { background: var(--accent-camel); color: var(--bg-base); padding: 0 2px; border-radius: 2px; }
+
+        /* Jump target highlight */
+        .jump-highlight {
+            background: rgba(212, 165, 116, 0.15);
+            box-shadow: 0 0 0 1px rgba(212, 165, 116, 0.4);
+            border-radius: 4px;
+            transition: background 0.5s ease, box-shadow 0.5s ease;
+        }
+        .jump-highlight.fade-out {
+            background: transparent;
+            box-shadow: none;
+        }
+
+        /* Podcast card hover */
+        .podcast-card {
+            transition: all 0.2s;
+        }
+        .podcast-card:hover {
+            border-color: var(--accent-camel);
+            transform: translateY(-1px);
+        }
+
+        /* Spinner for loading states */
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border-subtle);
+            border-top-color: var(--accent-camel);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Prompt selection chips */
+        .prompt-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            background: var(--bg-base);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .prompt-chip:hover {
+            border-color: var(--border-default);
+            color: var(--text-primary);
+            background: var(--bg-raised);
+        }
+    </style>
+</head>
+<body class="bg-base min-h-screen" style="color: var(--text-secondary);">
+    <div id="app"></div>
+
+    <script type="module">
+        const API_BASE = 'http://127.0.0.1:8889';
+
+        // Simple state management
+        let state = {
+            view: 'library', // 'library' or 'detail'
+            podcasts: [],
+            currentPodcast: null,
+            currentTab: 'transcript',
+            searchQuery: '',
+            searchResults: [],
+            scrollToSegment: null, // segment index to scroll to after clearing search
+            loading: false,
+            error: null,
+            processing: false,
+            processingStatus: '',
+            // Prompts (replaces presets)
+            availablePrompts: [],  // All available prompts
+            selectedPrompts: [],   // Currently selected prompt slugs
+            // Reprocess state
+            showReprocess: false,
+            reprocessPrompts: [],  // Selected prompts for reprocessing
+            reprocessing: false,
+            reprocessStatus: '',
+            // Processing progress state
+            processingProgress: null, // { stage, status, message, current, total, prompt }
+            // Library search & filter state
+            librarySearch: '',
+            librarySearchResults: null, // null = not searching, array = search results
+            librarySearching: false,
+            channels: [],
+            selectedChannel: null,
+            librarySort: 'recent', // recent, alpha, duration
+            compactView: false
+        };
+
+        // Render functions
+        function render() {
+            // Save focus state before re-render
+            const activeEl = document.activeElement;
+            const activeId = activeEl?.id;
+            // For text inputs, put cursor at end after render (avoids stale position from debounce)
+            const isTextInput = activeEl?.tagName === 'INPUT' && activeEl?.type === 'text';
+
+            const app = document.getElementById('app');
+            if (state.view === 'library') {
+                app.innerHTML = renderLibrary();
+            } else {
+                app.innerHTML = renderDetail();
+            }
+            attachEventListeners();
+
+            // Restore focus and put cursor at end for text inputs
+            if (activeId) {
+                const el = document.getElementById(activeId);
+                if (el) {
+                    el.focus();
+                    if (isTextInput && el.setSelectionRange) {
+                        // Put cursor at end of current value
+                        const len = el.value.length;
+                        el.setSelectionRange(len, len);
+                    }
+                }
+            }
+        }
+
+        function renderLibrary() {
+            return `
+                <div class="max-w-5xl mx-auto px-8 py-12">
+                    <!-- Header with character moment -->
+                    <header class="mb-12">
+                        <div class="flex items-baseline gap-4 mb-2 relative" style="width: fit-content;">
+                            <h1 class="title-display">Podcast Breakdown</h1>
+                            <!-- Hand-drawn sound wave accent -->
+                            <svg class="hand-drawn-accent" viewBox="0 0 40 32" fill="none">
+                                <!-- Sound wave / waveform -->
+                                <path d="M4 16 Q8 8, 12 16 T20 16 T28 16 T36 16"/>
+                                <path d="M4 16 Q8 24, 12 16 T20 16 T28 16 T36 16" style="opacity: 0.5;"/>
+                            </svg>
+                            <!-- ALT: Radiating arcs (uncomment to try)
+                            <svg class="hand-drawn-accent" viewBox="0 0 40 32" fill="none">
+                                <path d="M8 16 Q8 8, 16 8"/>
+                                <path d="M4 16 Q4 4, 20 4"/>
+                                <path d="M0 16 Q0 0, 24 0"/>
+                            </svg>
+                            -->
+                        </div>
+                        <p style="color: var(--text-tertiary); font-size: 14px;">Process YouTube podcasts with AI analysis</p>
+                    </header>
+
+                    <!-- Process new video card -->
+                    <div class="card p-6 mb-10">
+                        <div class="label-section mb-5">/ New</div>
+                        <div class="flex gap-3 mb-4">
+                            <input type="text" id="url-input" placeholder="Paste YouTube URL..."
+                                   class="input-base flex-1"
+                                   ${state.processing ? 'disabled' : ''}>
+                            <button data-action="process" class="btn-primary" ${state.processing || state.selectedPrompts.length === 0 ? 'disabled' : ''}>
+                                ${state.processing ? 'Processing...' : 'Process'}
+                            </button>
+                        </div>
+                        <!-- Prompt selection -->
+                        <div class="flex gap-2 flex-wrap">
+                            ${state.availablePrompts.map(p => {
+                                const selected = state.selectedPrompts.includes(p.slug);
+                                return '<button data-action="toggle-prompt" data-prompt="' + p.slug + '" class="prompt-chip" style="' +
+                                    (state.processing ? 'opacity: 0.5; pointer-events: none;' : '') +
+                                    (selected ? 'background: var(--accent-camel-subtle); color: var(--accent-camel); border-color: rgba(212, 165, 116, 0.4);' : '') +
+                                '" title="' + escapeHtml(p.description) + '">' +
+                                    (selected ? '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>' : '') +
+                                    '<span>' + escapeHtml(p.name) + '</span>' +
+                                '</button>';
+                            }).join('')}
+                        </div>
+                        ${state.selectedPrompts.length === 0 ? '<p class="mt-3" style="font-size: 12px; color: var(--text-muted);">Select at least one analysis to run</p>' : ''}
+                        ${renderProcessingProgress()}
+                    </div>
+
+                    <!-- Library section -->
+                    <div class="flex items-center justify-between mb-5">
+                        <div class="label-section">/ Library</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">
+                            ${state.librarySearchResults ? state.librarySearchResults.length : state.podcasts.length} podcasts
+                        </div>
+                    </div>
+
+                    <!-- Search bar -->
+                    <div class="mb-5">
+                        <div class="relative">
+                            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4" style="color: var(--text-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                            <input type="text"
+                                   id="library-search"
+                                   placeholder="Search podcasts, transcripts, analyses..."
+                                   value="${escapeHtml(state.librarySearch)}"
+                                   class="input-base"
+                                   style="padding-left: 44px; ${state.librarySearching ? 'opacity: 0.7;' : ''}">
+                            ${state.librarySearch ? `
+                                <button data-action="clear-library-search" class="absolute right-3 top-1/2 -translate-y-1/2" style="color: var(--text-muted);">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+
+                    <!-- Filters row: channels + sort + view toggle -->
+                    <div class="flex items-center gap-3 mb-5 flex-wrap">
+                        <!-- Channel chips -->
+                        <div class="flex gap-2 flex-wrap flex-1">
+                            <button data-action="filter-channel" data-channel=""
+                                    class="tag cursor-pointer transition-all ${!state.selectedChannel ? 'bg-accent-camel-subtle border-accent-camel/30' : ''}"
+                                    style="${!state.selectedChannel ? 'color: var(--accent-camel); background: var(--accent-camel-subtle); border-color: rgba(212, 165, 116, 0.3);' : ''}">
+                                All
+                            </button>
+                            ${state.channels.slice(0, 5).map(ch => `
+                                <button data-action="filter-channel" data-channel="${escapeHtml(ch.channel)}"
+                                        class="tag cursor-pointer transition-all"
+                                        style="${state.selectedChannel === ch.channel ? 'color: var(--accent-camel); background: var(--accent-camel-subtle); border-color: rgba(212, 165, 116, 0.3);' : ''}">
+                                    ${escapeHtml(ch.channel.length > 20 ? ch.channel.substring(0, 20) + '...' : ch.channel)} (${ch.count})
+                                </button>
+                            `).join('')}
+                            ${state.channels.length > 5 ? `
+                                <span class="tag" style="cursor: default;">+${state.channels.length - 5} more</span>
+                            ` : ''}
+                        </div>
+
+                        <!-- Sort dropdown -->
+                        <select id="library-sort" class="btn-ghost" style="padding: 6px 12px; font-size: 12px; cursor: pointer;">
+                            <option value="recent" ${state.librarySort === 'recent' ? 'selected' : ''}>Recent</option>
+                            <option value="alpha" ${state.librarySort === 'alpha' ? 'selected' : ''}>A-Z</option>
+                            <option value="duration" ${state.librarySort === 'duration' ? 'selected' : ''}>Duration</option>
+                        </select>
+
+                        <!-- View toggle -->
+                        <div class="flex" style="border: 1px solid var(--border-subtle); border-radius: 6px; overflow: hidden;">
+                            <button data-action="set-view" data-compact="false"
+                                    class="p-1.5 transition-colors"
+                                    style="${!state.compactView ? 'background: var(--bg-raised); color: var(--text-primary);' : 'color: var(--text-muted);'}"
+                                    title="Card view">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                                </svg>
+                            </button>
+                            <button data-action="set-view" data-compact="true"
+                                    class="p-1.5 transition-colors"
+                                    style="${state.compactView ? 'background: var(--bg-raised); color: var(--text-primary);' : 'color: var(--text-muted);'}"
+                                    title="Compact view">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    ${state.loading ? `
+                        <div class="text-center py-16" style="color: var(--text-muted);">Loading...</div>
+                    ` : state.error ? `
+                        <div class="card p-5" style="border-color: var(--semantic-error); color: #cd6464;">
+                            ${state.error}
+                        </div>
+                    ` : getDisplayPodcasts().length === 0 ? `
+                        <div class="text-center py-16" style="color: var(--text-muted);">
+                            ${state.librarySearch ? `
+                                <p>No results for "${escapeHtml(state.librarySearch)}"</p>
+                                <p class="mt-3" style="font-size: 13px;">Try a different search term</p>
+                            ` : state.selectedChannel ? `
+                                <p>No podcasts from this channel</p>
+                            ` : `
+                                <p>No podcasts processed yet.</p>
+                                <p class="mt-3" style="font-size: 13px;">Paste a YouTube URL above to get started</p>
+                            `}
+                        </div>
+                    ` : state.compactView ? `
+                        <!-- Compact list view -->
+                        <div class="card overflow-hidden">
+                            ${getDisplayPodcasts().map((p, idx) => `
+                                <div class="flex items-center gap-4 px-4 py-3 cursor-pointer hover:bg-raised transition-colors ${idx > 0 ? 'border-t border-border-subtle' : ''}"
+                                     data-action="open-podcast" data-folder="${p.folder}">
+                                    ${p.video_id ? `
+                                        <img src="https://img.youtube.com/vi/${p.video_id}/default.jpg"
+                                             alt=""
+                                             style="width: 40px; height: 30px; object-fit: cover; border-radius: 4px; flex-shrink: 0; background: var(--bg-base); border: 1px solid var(--border-subtle);">
+                                    ` : `
+                                        <div style="width: 40px; height: 30px; background: var(--bg-base); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-subtle);">
+                                            <svg style="width: 12px; height: 12px; color: var(--text-muted);" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M8 5v14l11-7z"/>
+                                            </svg>
+                                        </div>
+                                    `}
+                                    <div class="flex-1 min-w-0">
+                                        <span style="color: var(--text-primary); font-size: 14px;" class="truncate block">${escapeHtml(p.title)}</span>
+                                    </div>
+                                    <span style="color: var(--accent-camel); font-size: 12px; flex-shrink: 0;">${escapeHtml(p.channel)}</span>
+                                    <span style="color: var(--text-muted); font-size: 12px; width: 50px; text-align: right; flex-shrink: 0;">${p.duration || p.duration_formatted || ''}</span>
+                                    ${p.transcript_snippet ? `<span style="color: var(--text-muted); font-size: 11px; max-width: 200px; flex-shrink: 0;" class="truncate hidden lg:block">${p.transcript_snippet.substring(0, 60)}...</span>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : `
+                        <!-- Card view -->
+                        <div class="grid gap-4">
+                            ${getDisplayPodcasts().map(p => `
+                                <div class="card podcast-card p-5 cursor-pointer"
+                                     data-action="open-podcast" data-folder="${p.folder}">
+                                    <div class="flex gap-4">
+                                        ${p.video_id ? `
+                                            <img src="https://img.youtube.com/vi/${p.video_id}/default.jpg"
+                                                 alt=""
+                                                 style="width: 80px; height: 45px; object-fit: cover; border-radius: 6px; flex-shrink: 0; background: var(--bg-base); border: 1px solid var(--border-subtle);">
+                                        ` : `
+                                            <div style="width: 80px; height: 45px; background: var(--bg-base); border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-subtle);">
+                                                <svg style="width: 18px; height: 18px; color: var(--text-muted);" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M8 5v14l11-7z"/>
+                                                </svg>
+                                            </div>
+                                        `}
+                                        <div class="flex-1 min-w-0 flex justify-between items-start">
+                                            <div class="flex-1 min-w-0">
+                                                <h2 style="color: var(--text-primary); font-weight: 500; font-size: 15px;" class="truncate">${escapeHtml(p.title)}</h2>
+                                                <p style="color: var(--accent-camel); font-size: 13px; margin-top: 4px;">${escapeHtml(p.channel)}</p>
+                                            </div>
+                                            <div class="text-right ml-6 flex-shrink-0" style="font-size: 12px; color: var(--text-muted);">
+                                                <div>${p.publish_date || ''}</div>
+                                                <div style="margin-top: 2px;">${p.duration || p.duration_formatted || ''}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    ${p.transcript_snippet || p.analysis_snippet ? `
+                                        <div class="mt-3 text-sm" style="color: var(--text-muted); font-size: 12px; line-height: 1.5;">
+                                            ${p.transcript_snippet ? `<div class="mb-1">${p.transcript_snippet}</div>` : ''}
+                                            ${p.analysis_snippet ? `<div style="font-style: italic;">${p.analysis_snippet}</div>` : ''}
+                                        </div>
+                                    ` : ''}
+                                    <div class="mt-4 flex gap-2 flex-wrap items-center">
+                                        ${(p.analyses || []).map(a => `<span class="tag">${a.replace(/_/g, ' ')}</span>`).join('')}
+                                        ${p.word_count ? `<span style="font-size: 11px; color: var(--text-muted); margin-left: 4px;">${p.word_count.toLocaleString()} words</span>` : ''}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `}
+                </div>
+            `;
+        }
+
+        function renderDetail() {
+            const p = state.currentPodcast;
+            if (!p) return '<div class="p-6" style="color: var(--text-muted);">Loading...</div>';
+
+            const tabs = ['transcript', ...Object.keys(p.analyses)];
+
+            return `
+                <div class="h-screen flex flex-col">
+                    <!-- Header -->
+                    <header style="background: var(--bg-surface); border-bottom: 1px solid var(--border-subtle);" class="px-6 py-5 flex-shrink-0">
+                        <div class="flex items-center gap-4">
+                            <button data-action="back" class="btn-ghost" style="padding: 8px 12px;">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                </svg>
+                            </button>
+                            <div class="flex-1 min-w-0">
+                                <h1 style="color: var(--text-primary); font-weight: 500; font-size: 16px;" class="truncate">${escapeHtml(p.metadata.title || p.folder)}</h1>
+                                <p style="font-size: 13px; margin-top: 2px;"><span style="color: var(--accent-camel);">${escapeHtml(p.metadata.channel || '')}</span><span style="color: var(--text-tertiary);"> · ${p.metadata.duration_formatted || ''} · ${p.word_count.toLocaleString()} words</span></p>
+                            </div>
+                            ${p.metadata.url ? `
+                                <a href="${p.metadata.url}" target="_blank" style="color: var(--accent-camel); font-size: 13px; font-weight: 500;" class="hover:opacity-80 transition-opacity">
+                                    Open on YouTube →
+                                </a>
+                            ` : ''}
+                        </div>
+
+                        <!-- Tabs + Action buttons -->
+                        <div class="flex gap-1 mt-5 overflow-x-auto items-center">
+                            ${tabs.map(tab => `
+                                <button data-action="set-tab" data-tab="${tab}"
+                                        class="tab-btn ${state.currentTab === tab ? 'active' : ''}">
+                                    ${tab.charAt(0).toUpperCase() + tab.slice(1).replace(/_/g, ' ')}
+                                </button>
+                            `).join('')}
+                            <div class="flex-1"></div>
+                            <button data-action="toggle-reprocess" class="btn-ghost flex items-center gap-1.5" title="Run additional analyses">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                </svg>
+                                <span>Reprocess</span>
+                            </button>
+                            <button data-action="copy-content" class="btn-ghost flex items-center gap-1.5" title="Copy ${state.currentTab} to clipboard">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                                </svg>
+                                <span id="copy-btn-text">Copy</span>
+                            </button>
+                        </div>
+
+                        <!-- Reprocess panel (collapsible) -->
+                        ${state.showReprocess ? `
+                        <div class="mt-5 p-4" style="background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: 10px;">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="label">Run analyses</span>
+                                <div class="flex gap-2">
+                                    <button data-action="run-reprocess" class="btn-primary" style="padding: 8px 16px; font-size: 13px;" ${state.reprocessing || state.reprocessPrompts.length === 0 ? 'disabled' : ''}>
+                                        ${state.reprocessing ? 'Processing...' : 'Run'}
+                                    </button>
+                                    <button data-action="toggle-reprocess" class="btn-ghost" style="padding: 8px;">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="flex gap-2 flex-wrap">
+                                ${state.availablePrompts.map(prompt => {
+                                    const exists = state.currentPodcast ? Object.keys(state.currentPodcast.analyses).includes(prompt.slug) : false;
+                                    const selected = state.reprocessPrompts.includes(prompt.slug);
+                                    return '<button data-action="toggle-reprocess-prompt" data-prompt="' + prompt.slug + '" class="prompt-chip" style="' +
+                                        (state.reprocessing ? 'opacity: 0.5; pointer-events: none;' : '') +
+                                        (selected ? 'background: var(--accent-camel-subtle); color: var(--accent-camel); border-color: rgba(212, 165, 116, 0.4);' : '') +
+                                    '" title="' + (exists ? 'Will overwrite existing' : 'New analysis') + '">' +
+                                        (selected ? '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>' : '') +
+                                        '<span>' + prompt.name + (exists ? ' ↻' : '') + '</span>' +
+                                    '</button>';
+                                }).join('')}
+                            </div>
+                            ${state.reprocessPrompts.length === 0 ? '<p class="mt-3" style="font-size: 12px; color: var(--text-muted);">Select at least one analysis to run</p>' : ''}
+                            ${state.reprocessStatus ? '<div class="mt-3" style="font-size: 13px; color: var(--text-tertiary);">' + state.reprocessStatus + '</div>' : ''}
+                        </div>
+                        ` : ''}
+                    </header>
+
+                    <!-- Content -->
+                    <main class="flex-1 overflow-hidden flex flex-col">
+                        ${state.currentTab === 'transcript' ? renderTranscript() : renderAnalysis()}
+                    </main>
+                </div>
+            `;
+        }
+
+        function renderTranscript() {
+            const p = state.currentPodcast;
+
+            return `
+                <!-- Search bar -->
+                <div class="px-6 py-4" style="border-bottom: 1px solid var(--border-subtle); background: rgba(26, 29, 27, 0.5);">
+                    <div class="label-section mb-3">/ Search</div>
+                    <div class="relative">
+                        <input type="text"
+                               id="search-input"
+                               placeholder="Search transcript..."
+                               value="${escapeHtml(state.searchQuery)}"
+                               class="input-base" style="font-size: 13px; padding: 12px 16px;">
+                        ${state.searchQuery ? `
+                            <button data-action="clear-search" class="absolute right-3 top-1/2 -translate-y-1/2" style="color: var(--text-muted);">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                            </button>
+                        ` : ''}
+                    </div>
+                    ${state.searchResults.length > 0 ? `
+                        <div class="mt-3" style="font-size: 12px; color: var(--text-tertiary);">
+                            ${state.searchResults.length} matches found
+                        </div>
+                    ` : ''}
+                </div>
+
+                <!-- Transcript content -->
+                <div id="transcript-container" class="flex-1 overflow-y-auto p-6">
+                    ${state.searchResults.length > 0 ? `
+                        <div class="space-y-4">
+                            ${state.searchResults.map(r => `
+                                <div class="card p-4 cursor-pointer podcast-card"
+                                     data-action="jump-to-segment" data-segment="${r.segment_index}" title="Click to view in full transcript">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <a href="${getYouTubeTimestampUrl(p.metadata.url, r.start)}"
+                                           target="_blank"
+                                           style="font-size: 12px; color: var(--accent-camel); font-family: var(--font-mono); font-weight: 500;"
+                                           class="hover:opacity-80"
+                                           title="Open in YouTube"
+                                           onclick="event.stopPropagation()">${formatTime(r.start)}</a>
+                                        <span style="font-size: 11px; color: var(--text-muted);">Click to jump →</span>
+                                    </div>
+                                    ${r.context_before ? `<p style="color: var(--text-muted); font-size: 13px; margin-bottom: 8px;">...${escapeHtml(r.context_before)}</p>` : ''}
+                                    <p style="color: var(--text-secondary);">${highlightText(r.text, state.searchQuery)}</p>
+                                    ${r.context_after ? `<p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">${escapeHtml(r.context_after)}...</p>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : `
+                        <div class="space-y-1">
+                            ${p.transcript_segments.map((seg, idx) => `
+                                <div id="segment-${idx}" class="flex gap-3 py-1.5 rounded px-3 -mx-3 ${state.scrollToSegment === idx ? 'jump-highlight' : ''}" style="transition: background 0.15s;">
+                                    <a href="${getYouTubeTimestampUrl(p.metadata.url, seg.start)}"
+                                       target="_blank"
+                                       style="color: var(--accent-camel); font-size: 13px; font-family: 'SF Mono', Monaco, monospace; flex-shrink: 0; width: 60px;"
+                                       class="hover:opacity-80"
+                                       title="Open in YouTube at ${formatTime(seg.start)}">${formatTime(seg.start)}</a>
+                                    <span style="color: var(--text-secondary);">${escapeHtml(seg.text)}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `}
+                </div>
+            `;
+        }
+
+        function renderProcessingProgress() {
+            // Show nothing if not processing and no status
+            if (!state.processing && !state.processingStatus) return '';
+
+            const progress = state.processingProgress;
+
+            // Simple status message (completion or error)
+            if (!state.processing && state.processingStatus) {
+                return `
+                    <div class="mt-4 p-4" style="background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: 10px;">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" style="color: var(--semantic-success);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            <span style="color: var(--text-secondary); font-size: 14px;">${escapeHtml(state.processingStatus)}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Progress display during processing
+            if (!progress) {
+                return `
+                    <div class="mt-4 p-4" style="background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: 10px;">
+                        <div class="flex items-center gap-3">
+                            <div class="spinner"></div>
+                            <span style="color: var(--text-secondary); font-size: 14px;">${escapeHtml(state.processingStatus || 'Starting...')}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Calculate overall progress percentage
+            let progressPercent = 0;
+            let stageLabel = '';
+
+            if (progress.stage === 'fetch') {
+                progressPercent = progress.status === 'done' ? 15 : 5;
+                stageLabel = 'Fetching';
+            } else if (progress.stage === 'save') {
+                progressPercent = progress.status === 'done' ? 20 : 17;
+                stageLabel = 'Saving';
+            } else if (progress.stage === 'analysis') {
+                const baseProgress = 20;
+                const analysisRange = 75; // 20% to 95%
+                const perPrompt = analysisRange / (progress.total || 1);
+                progressPercent = baseProgress + (progress.current - (progress.status === 'running' ? 0.5 : 0)) * perPrompt;
+                stageLabel = 'Analyzing';
+            } else if (progress.stage === 'index') {
+                progressPercent = progress.status === 'done' ? 100 : 97;
+                stageLabel = 'Indexing';
+            } else if (progress.stage === 'complete') {
+                progressPercent = 100;
+                stageLabel = 'Complete';
+            }
+
+            // Build prompt tags showing completion status
+            const prompts = state.selectedPrompts;
+
+            return `
+                <div class="mt-4 p-4" style="background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: 10px;">
+                    <!-- Status message -->
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="spinner"></div>
+                        <span style="color: var(--text-secondary); font-size: 14px;">${escapeHtml(progress.message)}</span>
+                    </div>
+
+                    <!-- Progress bar -->
+                    <div style="height: 4px; background: var(--bg-raised); border-radius: 2px; overflow: hidden; margin-bottom: 12px;">
+                        <div style="height: 100%; width: ${progressPercent}%; background: linear-gradient(90deg, var(--accent-camel), var(--accent-terra)); transition: width 0.3s ease; border-radius: 2px;"></div>
+                    </div>
+
+                    <!-- Prompt tags with status -->
+                    ${progress.stage === 'analysis' || progress.stage === 'index' || progress.stage === 'complete' ? `
+                        <div class="flex gap-2 flex-wrap">
+                            ${prompts.map((p, i) => {
+                                let tagStyle = '';
+                                let icon = '';
+                                if (progress.stage === 'complete' || (progress.stage === 'index')) {
+                                    tagStyle = 'background: var(--accent-camel-subtle); color: var(--accent-camel); border-color: rgba(212, 165, 116, 0.3);';
+                                    icon = ' ✓';
+                                } else if (progress.prompt === p && progress.status === 'running') {
+                                    tagStyle = 'background: var(--accent-camel-subtle); color: var(--accent-camel); border-color: var(--accent-camel);';
+                                    icon = ' ...';
+                                } else if (progress.current > i + 1 || (progress.current === i + 1 && progress.status === 'done')) {
+                                    tagStyle = 'background: var(--accent-camel-subtle); color: var(--accent-camel); border-color: rgba(212, 165, 116, 0.3);';
+                                    icon = ' ✓';
+                                }
+                                return '<span class="tag" style="' + tagStyle + '">' + p.replace(/_/g, ' ') + icon + '</span>';
+                            }).join('')}
+                        </div>
+                    ` : ''}
+
+                    ${progress.title ? `
+                        <div class="mt-3 pt-3" style="border-top: 1px solid var(--border-subtle); font-size: 12px; color: var(--text-muted);">
+                            ${escapeHtml(progress.title)} · ${progress.duration || ''} · ${progress.word_count?.toLocaleString() || ''} words
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function renderAnalysis() {
+            const p = state.currentPodcast;
+            const content = p.analyses[state.currentTab] || 'Analysis not found';
+
+            // Simple markdown rendering
+            const html = renderMarkdown(content);
+
+            return `
+                <div class="flex-1 overflow-y-auto p-6">
+                    <div class="prose max-w-none">
+                        ${html}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Helper functions
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatTime(seconds) {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = Math.floor(seconds % 60);
+            if (h > 0) {
+                return `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            }
+            return `${m}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function getYouTubeTimestampUrl(url, seconds) {
+            // Build YouTube URL with timestamp parameter
+            if (!url) return '#';
+            const secs = Math.floor(seconds);
+            // If URL already has query params, use & otherwise use ?
+            const separator = url.includes('?') ? '&' : '?';
+            return `${url}${separator}t=${secs}`;
+        }
+
+        function highlightText(text, query) {
+            if (!query) return escapeHtml(text);
+            const escaped = escapeHtml(text);
+            const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+            return escaped.replace(regex, '<span class="highlight">$1</span>');
+        }
+
+        function escapeRegex(str) {
+            return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        // Get podcasts to display based on search/filter state
+        function getDisplayPodcasts() {
+            // If searching, return search results
+            if (state.librarySearchResults !== null) {
+                return state.librarySearchResults;
+            }
+
+            // Otherwise, filter and sort the podcast list
+            let podcasts = [...state.podcasts];
+
+            // Filter by channel
+            if (state.selectedChannel) {
+                podcasts = podcasts.filter(p => p.channel === state.selectedChannel);
+            }
+
+            // Sort
+            if (state.librarySort === 'alpha') {
+                podcasts.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+            } else if (state.librarySort === 'duration') {
+                podcasts.sort((a, b) => {
+                    const durA = parseDuration(a.duration || a.duration_formatted || '0:00');
+                    const durB = parseDuration(b.duration || b.duration_formatted || '0:00');
+                    return durB - durA;
+                });
+            }
+            // 'recent' is default sort from API
+
+            return podcasts;
+        }
+
+        // Parse duration string like "1:23:45" or "23:45" to seconds
+        function parseDuration(str) {
+            if (!str) return 0;
+            const parts = str.split(':').map(Number);
+            if (parts.length === 3) {
+                return parts[0] * 3600 + parts[1] * 60 + parts[2];
+            } else if (parts.length === 2) {
+                return parts[0] * 60 + parts[1];
+            }
+            return 0;
+        }
+
+        function renderMarkdown(text) {
+            // Very basic markdown rendering
+            let html = escapeHtml(text);
+
+            // Headers
+            html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+            html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+            html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+
+            // Bold
+            html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+            // Italic
+            html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+
+            // Blockquotes
+            html = html.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+
+            // Lists (basic)
+            html = html.replace(/^• (.+)$/gm, '<li>$1</li>');
+            html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+
+            // Wrap consecutive li elements in ul
+            html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+
+            // Horizontal rules
+            html = html.replace(/^---$/gm, '<hr>');
+
+            // Paragraphs (double newlines)
+            html = html.replace(/\n\n/g, '</p><p>');
+            html = '<p>' + html + '</p>';
+
+            // Clean up empty paragraphs
+            html = html.replace(/<p>\s*<\/p>/g, '');
+            html = html.replace(/<p>(<h[123]>)/g, '$1');
+            html = html.replace(/(<\/h[123]>)<\/p>/g, '$1');
+            html = html.replace(/<p>(<ul>)/g, '$1');
+            html = html.replace(/(<\/ul>)<\/p>/g, '$1');
+            html = html.replace(/<p>(<hr>)<\/p>/g, '$1');
+            html = html.replace(/<p>(<blockquote>)/g, '$1');
+            html = html.replace(/(<\/blockquote>)<\/p>/g, '$1');
+
+            return html;
+        }
+
+        // Event handling
+        function attachEventListeners() {
+            document.querySelectorAll('[data-action]').forEach(el => {
+                el.addEventListener('click', handleAction);
+            });
+
+            // Transcript search input (detail view)
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', debounce(handleSearch, 300));
+            }
+
+            // Library search input
+            const librarySearchInput = document.getElementById('library-search');
+            if (librarySearchInput) {
+                librarySearchInput.addEventListener('input', debounce(handleLibrarySearch, 300));
+            }
+
+            // Library sort dropdown
+            const librarySortSelect = document.getElementById('library-sort');
+            if (librarySortSelect) {
+                librarySortSelect.addEventListener('change', (e) => {
+                    state.librarySort = e.target.value;
+                    render();
+                });
+            }
+
+        }
+
+        function handleAction(e) {
+            const action = e.currentTarget.dataset.action;
+
+            switch (action) {
+                case 'open-podcast':
+                    openPodcast(e.currentTarget.dataset.folder);
+                    break;
+                case 'back':
+                    state.view = 'library';
+                    state.currentPodcast = null;
+                    state.currentTab = 'transcript';
+                    state.searchQuery = '';
+                    state.searchResults = [];
+                    render();
+                    break;
+                case 'set-tab':
+                    state.currentTab = e.currentTarget.dataset.tab;
+                    render();
+                    break;
+                case 'clear-search':
+                    state.searchQuery = '';
+                    state.searchResults = [];
+                    state.scrollToSegment = null;
+                    render();
+                    break;
+                case 'jump-to-segment':
+                    const segmentIndex = parseInt(e.currentTarget.dataset.segment);
+                    state.searchQuery = '';
+                    state.searchResults = [];
+                    state.scrollToSegment = segmentIndex;
+                    render();
+                    // Scroll to the segment after render
+                    setTimeout(() => {
+                        const el = document.getElementById(`segment-${segmentIndex}`);
+                        if (el) {
+                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            // Fade out highlight after a few seconds (CSS transition, no re-render)
+                            setTimeout(() => {
+                                el.classList.add('fade-out');
+                                state.scrollToSegment = null;
+                            }, 3000);
+                        }
+                    }, 50);
+                    break;
+                case 'process':
+                    processVideo();
+                    break;
+                case 'copy-content':
+                    copyCurrentContent();
+                    break;
+                case 'toggle-reprocess':
+                    state.showReprocess = !state.showReprocess;
+                    state.reprocessStatus = '';
+                    render();
+                    break;
+                case 'run-reprocess':
+                    runReprocess();
+                    break;
+                case 'clear-library-search':
+                    state.librarySearch = '';
+                    state.librarySearchResults = null;
+                    render();
+                    break;
+                case 'filter-channel':
+                    const channel = e.currentTarget.dataset.channel;
+                    state.selectedChannel = channel || null;
+                    // Clear search when changing channel filter
+                    state.librarySearch = '';
+                    state.librarySearchResults = null;
+                    render();
+                    break;
+                case 'set-view':
+                    state.compactView = e.currentTarget.dataset.compact === 'true';
+                    render();
+                    break;
+                case 'toggle-prompt':
+                    const promptSlug = e.currentTarget.dataset.prompt;
+                    if (state.selectedPrompts.includes(promptSlug)) {
+                        state.selectedPrompts = state.selectedPrompts.filter(p => p !== promptSlug);
+                    } else {
+                        state.selectedPrompts = [...state.selectedPrompts, promptSlug];
+                    }
+                    render();
+                    break;
+                case 'toggle-reprocess-prompt':
+                    const reprocessPrompt = e.currentTarget.dataset.prompt;
+                    if (state.reprocessPrompts.includes(reprocessPrompt)) {
+                        state.reprocessPrompts = state.reprocessPrompts.filter(p => p !== reprocessPrompt);
+                    } else {
+                        state.reprocessPrompts = [...state.reprocessPrompts, reprocessPrompt];
+                    }
+                    render();
+                    break;
+            }
+        }
+
+        async function runReprocess() {
+            if (!state.currentPodcast || state.reprocessPrompts.length === 0) return;
+
+            state.reprocessing = true;
+            state.reprocessStatus = 'Running analyses...';
+            render();
+
+            try {
+                const res = await fetch(`${API_BASE}/podcasts/${state.currentPodcast.folder}/reprocess`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompts: state.reprocessPrompts })
+                });
+
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.detail || 'Reprocessing failed');
+                }
+
+                const data = await res.json();
+                state.reprocessStatus = `Done! Completed: ${data.analyses_completed.join(', ')}`;
+
+                // Reload the podcast to get new analyses
+                await openPodcast(state.currentPodcast.folder);
+                state.showReprocess = false;
+
+            } catch (err) {
+                state.reprocessStatus = `Error: ${err.message}`;
+            } finally {
+                state.reprocessing = false;
+                render();
+            }
+        }
+
+        async function copyCurrentContent() {
+            const p = state.currentPodcast;
+            if (!p) return;
+
+            let text = '';
+            if (state.currentTab === 'transcript') {
+                // Copy transcript with timestamps
+                text = p.transcript_segments.map(seg =>
+                    `[${formatTime(seg.start)}] ${seg.text}`
+                ).join('\n');
+            } else {
+                // Copy analysis content (raw markdown)
+                text = p.analyses[state.currentTab] || '';
+            }
+
+            try {
+                await navigator.clipboard.writeText(text);
+                // Show feedback
+                const btn = document.getElementById('copy-btn-text');
+                if (btn) {
+                    const original = btn.textContent;
+                    btn.textContent = 'Copied!';
+                    setTimeout(() => { btn.textContent = original; }, 1500);
+                }
+            } catch (err) {
+                console.error('Copy failed:', err);
+                // Fallback: select text alert
+                alert('Copy failed. Please try Ctrl+C after selecting text.');
+            }
+        }
+
+        async function processVideo() {
+            const urlInput = document.getElementById('url-input');
+            const url = urlInput?.value?.trim();
+
+            if (!url) {
+                state.error = 'Please enter a YouTube URL';
+                render();
+                return;
+            }
+
+            if (state.selectedPrompts.length === 0) {
+                state.error = 'Please select at least one analysis to run';
+                render();
+                return;
+            }
+
+            state.processing = true;
+            state.processingStatus = 'Connecting...';
+            state.processingProgress = null;
+            state.error = null;
+            render();
+
+            try {
+                // Use SSE streaming endpoint for progress updates
+                const promptsParam = state.selectedPrompts.join(',');
+                const streamUrl = `${API_BASE}/process/stream?url=${encodeURIComponent(url)}&prompts=${encodeURIComponent(promptsParam)}`;
+                const eventSource = new EventSource(streamUrl);
+
+                eventSource.onmessage = async (event) => {
+                    const data = JSON.parse(event.data);
+
+                    // Update progress state
+                    state.processingProgress = data;
+                    state.processingStatus = data.message;
+
+                    // Handle completion
+                    if (data.stage === 'complete') {
+                        eventSource.close();
+                        state.processing = false;
+                        state.processingStatus = `Done! Processed: ${data.title}`;
+
+                        // Reload podcasts list and channels
+                        await Promise.all([loadPodcasts(), loadChannels()]);
+
+                        // Clear input
+                        if (urlInput) urlInput.value = '';
+
+                        // Clear progress after a delay
+                        setTimeout(() => {
+                            state.processingProgress = null;
+                            state.processingStatus = '';
+                            render();
+                        }, 3000);
+                    }
+
+                    // Handle errors
+                    if (data.stage === 'error') {
+                        eventSource.close();
+                        state.processing = false;
+                        state.error = data.message;
+                        state.processingStatus = '';
+                        state.processingProgress = null;
+                    }
+
+                    render();
+                };
+
+                eventSource.onerror = (err) => {
+                    console.error('SSE error:', err);
+                    eventSource.close();
+                    state.processing = false;
+                    state.error = 'Connection lost during processing';
+                    state.processingStatus = '';
+                    state.processingProgress = null;
+                    render();
+                };
+
+            } catch (err) {
+                state.error = err.message;
+                state.processingStatus = '';
+                state.processing = false;
+                state.processingProgress = null;
+                render();
+            }
+        }
+
+        async function handleSearch(e) {
+            const rawValue = e.target.value;
+            const query = rawValue.trim();
+
+            // Store raw value to preserve spaces in input
+            state.searchQuery = rawValue;
+
+            if (query.length < 2) {
+                state.searchResults = [];
+                render();
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_BASE}/podcasts/${state.currentPodcast.folder}/search?q=${encodeURIComponent(query)}`);
+                const data = await res.json();
+                state.searchResults = data.results || [];
+                render();
+            } catch (err) {
+                console.error('Search failed:', err);
+            }
+        }
+
+        // Library-wide full-text search
+        async function handleLibrarySearch(e) {
+            const rawValue = e.target.value;
+            const query = rawValue.trim();
+
+            // Store raw value to preserve spaces in input
+            state.librarySearch = rawValue;
+
+            if (query.length < 2) {
+                state.librarySearchResults = null;
+                render();
+                return;
+            }
+
+            state.librarySearching = true;
+            render();
+
+            try {
+                let url = `${API_BASE}/api/search?q=${encodeURIComponent(query)}`;
+                if (state.selectedChannel) {
+                    url += `&channel=${encodeURIComponent(state.selectedChannel)}`;
+                }
+
+                const res = await fetch(url);
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.detail || 'Search failed');
+                }
+
+                const data = await res.json();
+                state.librarySearchResults = data.results || [];
+            } catch (err) {
+                console.error('Library search failed:', err);
+                state.librarySearchResults = [];
+            } finally {
+                state.librarySearching = false;
+                render();
+            }
+        }
+
+        function debounce(fn, delay) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => fn.apply(this, args), delay);
+            };
+        }
+
+        // API calls
+        async function loadPodcasts() {
+            state.loading = true;
+            state.error = null;
+            render();
+
+            try {
+                const res = await fetch(`${API_BASE}/podcasts`);
+                if (!res.ok) throw new Error('Failed to load podcasts');
+                state.podcasts = await res.json();
+            } catch (err) {
+                state.error = `Failed to connect to API. Make sure the server is running: python api.py`;
+                console.error(err);
+            } finally {
+                state.loading = false;
+                render();
+            }
+        }
+
+        async function openPodcast(folder) {
+            state.loading = true;
+            render();
+
+            try {
+                const res = await fetch(`${API_BASE}/podcasts/${folder}`);
+                if (!res.ok) throw new Error('Failed to load podcast');
+                state.currentPodcast = await res.json();
+                state.view = 'detail';
+                state.currentTab = 'transcript';
+            } catch (err) {
+                state.error = 'Failed to load podcast details';
+                console.error(err);
+            } finally {
+                state.loading = false;
+                render();
+            }
+        }
+
+        async function loadPrompts() {
+            try {
+                const res = await fetch(`${API_BASE}/prompts`);
+                if (res.ok) {
+                    state.availablePrompts = await res.json();
+                    // Select summary and key_claims by default
+                    if (state.selectedPrompts.length === 0) {
+                        const defaults = ['summary', 'key_claims'];
+                        state.selectedPrompts = defaults.filter(d =>
+                            state.availablePrompts.some(p => p.slug === d)
+                        );
+                    }
+                }
+            } catch (err) {
+                console.error('Failed to load prompts:', err);
+                state.availablePrompts = [];
+            }
+        }
+
+        async function loadChannels() {
+            try {
+                const res = await fetch(`${API_BASE}/api/channels`);
+                if (res.ok) {
+                    const data = await res.json();
+                    state.channels = data.channels || [];
+                }
+            } catch (err) {
+                console.error('Failed to load channels:', err);
+                state.channels = [];
+            }
+        }
+
+        // Initialize
+        async function init() {
+            await loadPrompts();
+            await Promise.all([loadPodcasts(), loadChannels()]);
+        }
+        init();
+    </script>
+</body>
+</html>

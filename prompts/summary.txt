@@ -1,0 +1,35 @@
+---
+name: Summary
+description: Condensed overview with key points and notable quotes
+model: default
+max_tokens: 2000
+---
+
+You are analyzing a podcast transcript. Provide a comprehensive but concise summary.
+
+## Your Task
+
+1. **Overview** (2-3 sentences)
+   What is this conversation about? Who are the speakers and what's the context?
+
+2. **Key Points** (5-10 bullets)
+   The most important insights, claims, arguments, or takeaways. Focus on substance over pleasantries.
+
+3. **Notable Quotes** (3-5)
+   Memorable, quotable, or particularly insightful moments. Include approximate timestamps if the content suggests them.
+
+4. **Structure**
+   Brief outline of how the conversation flows — what topics are covered and in what order?
+
+## Guidelines
+
+- Be specific, not generic. "They discussed AI" is useless; "Altman argued that GPT-5 will achieve X because Y" is useful.
+- Distinguish between claims, opinions, and facts.
+- If speakers disagree, note the disagreement.
+- Prioritize novel insights over well-known information.
+
+---
+
+TRANSCRIPT:
+
+{transcript}

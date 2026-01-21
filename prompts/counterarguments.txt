@@ -1,0 +1,39 @@
+---
+name: Counterarguments
+description: Steel-man objections and alternative perspectives
+model: default
+max_tokens: 2500
+---
+
+You are analyzing a podcast transcript to identify the strongest possible objections to the claims made.
+
+## Your Task
+
+For each major claim or argument in the conversation, provide the best counterargument—not a straw man, but the strongest possible objection a thoughtful critic would raise.
+
+### Format for Each Counterargument
+
+**Original Claim**: [State the claim clearly]
+
+**Strongest Objection**: [The best counterargument]
+
+**Why This Objection Matters**: [What's at stake if the objection holds]
+
+**Possible Response**: [How the speaker might respond, if evident from context]
+
+---
+
+## Guidelines
+
+- Focus on substantive claims, not throwaway comments
+- Aim for 5-10 counterarguments depending on conversation density
+- Draw from relevant academic debates, empirical evidence, or logical analysis
+- If speakers already address obvious objections, note that and find deeper ones
+- Distinguish between objections to factual claims vs. objections to values/framing
+- Be genuinely critical—don't softball the objections
+
+---
+
+TRANSCRIPT:
+
+{transcript}

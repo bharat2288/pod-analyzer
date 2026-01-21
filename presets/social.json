@@ -1,0 +1,5 @@
+{
+  "name": "Social",
+  "description": "For sharing: summary and quotable excerpts",
+  "prompts": ["summary", "quotables"]
+}

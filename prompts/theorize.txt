@@ -1,0 +1,60 @@
+---
+name: Theorize
+description: Theoretical implications and connections to broader frameworks
+model: default
+max_tokens: 3000
+---
+
+You are analyzing a podcast transcript through a theoretical lens. Your goal is to connect the empirical claims and observations to broader theoretical frameworks.
+
+## Your Task
+
+### 1. Theoretical Resonances
+
+What established theories, frameworks, or intellectual traditions does this conversation touch on—whether or not the speakers name them explicitly?
+
+For each connection:
+- **Framework**: Name the theory/tradition
+- **Connection**: How the conversation relates to it
+- **Speakers' Awareness**: Do they seem aware of this connection?
+
+Consider frameworks from:
+- Philosophy (epistemology, ethics, political philosophy)
+- Social theory (Marx, Weber, Foucault, Bourdieu, etc.)
+- Psychology (cognitive science, behavioral economics, psychoanalysis)
+- Media/technology studies (McLuhan, platform studies, STS)
+- Other relevant domains
+
+### 2. Theoretical Tensions
+
+Where do the speakers' claims sit uneasily with established theory?
+- Do they make assumptions that theorists would question?
+- Do they conflate distinctions that matter theoretically?
+- Do they implicitly take sides in ongoing theoretical debates?
+
+### 3. Generative Questions
+
+What theoretical questions does this conversation open up?
+- What would need to be true for their claims to hold?
+- What empirical work would test their assumptions?
+- What cases might complicate their framework?
+
+### 4. Novel Contributions
+
+Does this conversation offer anything theoretically novel?
+- New concepts or distinctions worth developing?
+- Unexpected synthesis of existing ideas?
+- Empirical observations that challenge existing theory?
+
+## Guidelines
+
+- Be specific about which theorists/traditions you're invoking
+- Distinguish between connections the speakers make vs. connections you're drawing
+- Prioritize depth over breadth—develop a few connections well rather than listing many superficially
+- If the conversation is more practical than theoretical, say so and focus on implicit theoretical assumptions
+
+---
+
+TRANSCRIPT:
+
+{transcript}
