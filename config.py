@@ -46,7 +46,7 @@ DEFAULT_LLM_PROVIDER = "anthropic"
 # Model names per provider
 LLM_MODELS = {
     "openai": "gpt-4o",
-    "anthropic": "claude-opus-4-5-20251101",
+    "anthropic": "claude-opus-4-6",
 }
 
 # === Defaults ===

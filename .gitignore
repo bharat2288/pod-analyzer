@@ -33,3 +33,5 @@ specs/
 # Database
 *.db
 search_index.db
+*.epub
+.claude/

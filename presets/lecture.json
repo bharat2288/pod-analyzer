@@ -1,0 +1,5 @@
+{
+  "name": "Lecture",
+  "description": "Lecture analysis: summary and concept map",
+  "prompts": ["summary", "concept_map"]
+}
