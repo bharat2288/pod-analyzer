@@ -6,7 +6,7 @@ cssclasses:
   - project-home
 ---
 # Pod Transcriber
-*[[dev-hub|Hub]]*
+*[[dev-hub|Hub]] · [[README|GitHub]]*
 
 YouTube podcast transcript processing pipeline. Configurable LLM analysis via modular prompts, local web UI for browsing processed content.
 
@@ -84,7 +84,3 @@ SORT type ASC
 > > FROM "knowledge/sessions/pod-transcriber"
 > > SORT file.mtime DESC
 > > ```
-
-## GitHub
-
-- [[README]]
