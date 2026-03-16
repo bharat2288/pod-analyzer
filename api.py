@@ -32,10 +32,15 @@ from search import (
 # Static files directory
 STATIC_DIR = BASE_DIR / "static"
 
+import os as _os
+_debug = _os.getenv("DEBUG", "").lower() in ("1", "true", "yes")
 app = FastAPI(
     title="Podcast Breakdown API",
     description="Browse and read processed podcast transcripts and analyses",
-    version="0.1.0"
+    version="0.1.0",
+    docs_url="/docs" if _debug else None,
+    redoc_url="/redoc" if _debug else None,
+    openapi_url="/openapi.json" if _debug else None,
 )
 
 # Allow CORS for local development
