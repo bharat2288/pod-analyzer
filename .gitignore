@@ -35,3 +35,6 @@ specs/
 search_index.db
 *.epub
 .claude/
+
+# Canonical specs live in the private dev-specs repo
+*-home.md
